@@ -128,7 +128,7 @@ const Chat: React.FC = () => {
       }}
     >
       <Typography variant='h4' align='center' gutterBottom>
-        GPT-4 Chat
+        GPT-4o-mini Chat
       </Typography>
 
       <Paper

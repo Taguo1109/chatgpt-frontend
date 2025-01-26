@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import { Box, Typography, IconButton, Paper } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 const AutoCounter: React.FC = () => {
   // 狀態管理
@@ -38,7 +42,7 @@ const AutoCounter: React.FC = () => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-
+    
     // 在組件卸載時清除計時器
     return () => {
       if (intervalRef.current !== null) {
@@ -48,19 +52,62 @@ const AutoCounter: React.FC = () => {
   }, [isRunning]);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>自動計數器</h1>
-      <p>計數值：{count}</p>
-      <div>
-        <button onClick={startCounter} disabled={isRunning}>
-          開始
-        </button>
-        <button onClick={stopCounter} disabled={!isRunning}>
-          暫停
-        </button>
-        <button onClick={resetCounter}>重置</button>
-      </div>
-    </div>
+    <Box
+      sx={{
+        textAlign: 'center',
+        marginTop: '50px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 3,
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 4,
+          borderRadius: 2,
+          maxWidth: '400px',
+          width: '100%',
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant='h4' gutterBottom>
+          自動計數器
+        </Typography>
+        <Typography variant='h2' color='primary' sx={{ fontWeight: 'bold' }}>
+          {count}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 2,
+            marginTop: 3,
+          }}
+        >
+          <IconButton
+            color='success'
+            onClick={startCounter}
+            disabled={isRunning}
+            size='large'
+          >
+            <PlayArrowIcon fontSize='inherit' />
+          </IconButton>
+          <IconButton
+            color='warning'
+            onClick={stopCounter}
+            disabled={!isRunning}
+            size='large'
+          >
+            <PauseIcon fontSize='inherit' />
+          </IconButton>
+          <IconButton color='error' onClick={resetCounter} size='large'>
+            <RestartAltIcon fontSize='inherit' />
+          </IconButton>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 
