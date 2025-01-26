@@ -1,46 +1,95 @@
-# Getting Started with Create React App
+# ChatGPT React 應用程式
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+這是一個使用 React 建置的簡單聊天介面，您可以透過它與 OpenAI 的 GPT 模型互動。
 
-## Available Scripts
+## 快速開始
 
-In the project directory, you can run:
+按照以下步驟啟動並運行此應用程式：
+
+### 1. 複製專案
+
+將此專案複製到本地端：
+
+```bash
+git clone <https://github.com/Taguo1109/chatgpt-frontend.git>
+cd <所儲存的資料夾>
+```
+
+### 2. 安裝依賴
+
+使用 Yarn 安裝所需的依賴套件：
+
+```bash
+yarn install
+```
+
+### 3. 取得 OpenAI API 金鑰
+
+1. 前往 [OpenAI API 金鑰](https://platform.openai.com/settings/organization/api-keys) 頁面。
+2. 生成一組新的 API 金鑰。
+3. 在 [帳單設定](https://platform.openai.com/settings/organization/billing/overview) 中設定信用卡資料並充值，否則即使擁有 API 金鑰，也無法使用該服務。
+
+### 4. 設定環境變數
+
+在專案根目錄下建立一個 `.env` 文件，並新增以下內容：
+
+```env
+REACT_APP_OPENAI_API_KEY='你的-openai-api-key'
+```
+
+> **注意：** 將 `你的-openai-api-key` 替換為您從 OpenAI 獲取的實際金鑰。
+
+### 5. 啟動開發伺服器
+
+啟動應用程式：
+
+```bash
+yarn start
+```
+
+在瀏覽器中開啟 [http://localhost:3000](http://localhost:3000)，即可開始與您的 GPT 模型互動！
+
+---
+
+## 可用指令
 
 ### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+啟動開發模式伺服器。
 
 ### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+執行測試，進入互動式檢視模式。
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+將應用程式打包為生產環境版本，輸出檔案將位於 `build` 資料夾中。
 
 ### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+將所有配置檔案和依賴複製到專案中，讓您完全自定義。**注意：此操作不可逆。**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 功能特色
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- 即時與 OpenAI GPT 模型互動。
+- 模擬打字效果，提升使用體驗。
+- 支援行動裝置，設計響應式界面。
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 注意事項
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 請確保您擁有有效的 API 金鑰，並已在 OpenAI 設定有效的帳單資訊。否則，API 請求將無法執行。
+- 使用 OpenAI 的 GPT API 可能會產生費用，請注意監控您的使用量。
+
+---
+
+## 更多資訊
+
+- 瞭解 Create React App，請參考 [官方文件](https://facebook.github.io/create-react-app/docs/getting-started)。
+- 瞭解 React，請參考 [React 官方文件](https://reactjs.org/)。
+- 瞭解 OpenAI API，請參考 [OpenAI API 文件](https://platform.openai.com/docs/)。
+
+---
