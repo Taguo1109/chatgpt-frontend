@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from
 import { Box, Tabs, Tab } from "@mui/material";
 import Chat from "./components/Chat";
 import TwoGPTChat from "./components/TwoGPTChat";
+import AutoCounter from "./components/AutoCounter";
 
 const App: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Chat />} />
         <Route path="/two-gpt-chat" element={<TwoGPTChat />} />
+        <Route path="/auto-counter" element={<AutoCounter />} />
       </Routes>
     </Router>
   );
@@ -35,6 +37,7 @@ const MainTabs: React.FC = () => {
       >
         <Tab label="Chat" value="/" />
         <Tab label="Two GPT Chat" value="/two-gpt-chat" />
+        <Tab label="Auto Counter" value="/auto-counter" />
       </Tabs>
     </Box>
   );

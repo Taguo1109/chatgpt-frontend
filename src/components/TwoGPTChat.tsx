@@ -20,6 +20,7 @@ const TwoGPTChat: React.FC = () => {
   const scrollToBottom = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  const isChattingRef = useRef(isChatting); // 抓取isChatting最新值
 
   useEffect(() => {
     scrollToBottom(leftEndRef);
@@ -30,6 +31,8 @@ const TwoGPTChat: React.FC = () => {
   }, [rightMessages]);
 
   useEffect(() => {
+    // 每次 isChatting 更新時同步更新 ref 的值
+    isChattingRef.current = isChatting;
     console.log('isChatting updated:', isChatting);
   }, [isChatting]);
 
@@ -68,11 +71,10 @@ const TwoGPTChat: React.FC = () => {
     const setOtherMessages =
       side === 'right' ? setRightMessages : setLeftMessages;
     console.log(input);
-
+  
     setIsTyping(true);
-
+  
     try {
-      // 调用 OpenAI API
       const response = await fetch(
         'https://api.openai.com/v1/chat/completions',
         {
@@ -87,22 +89,41 @@ const TwoGPTChat: React.FC = () => {
           }),
         }
       );
-
+  
       const data = await response.json();
-
+      console.log(data);
+      
       if (response.ok) {
         const reply = data.choices[0].message.content; // GPT 回復內容
         let currentIndex = 0;
-
-        // 模擬逐字顯示
-        const interval = setInterval(() => {
+        /**
+         * 問題：
+         * isChattingRef並沒有更新
+         * 閉包陷阱 (Closure Issue)：
+         * 在 typeNextCharacter 函數內部，isChatting 的值被捕獲為定義該函數時的值（即 false），即使在後續更新後，它仍然是舊值。
+         * React 的狀態更新是異步的，當閉包內捕獲狀態時，該狀態不會自動跟隨最新值。
+         * setTimeout 的執行上下文：
+         * 每次調用 typeNextCharacter 時，isChatting 的值基於當前閉包的上下文，而不是最新的 React 狀態。
+         * 解決方法：
+         * 可以使用 useRef 儲存最新的 isChatting 值，因為 useRef 的值在組件更新時保持穩定，不會受閉包影響。
+         *   useEffect(() => {
+         *    // 每次 isChatting 更新時同步更新 ref 的值
+         *    isChattingRef.current = isChatting;
+         *    console.log('isChatting updated:', isChatting);
+         *    }, [isChatting]);
+         */
+        const typeNextCharacter = () => {
+          console.log(isChattingRef.current); // 確保使用最新的 isChatting 值
+          
+          if (!isChattingRef.current) return; // 暫停時中斷模擬
           let updatedMessages: Message[] = [];
-
+          
+  
           // 更新當前窗口消息
           setMessages((prev) => {
             const updated = [...prev];
             const lastMessage = updated[updated.length - 1];
-
+  
             if (lastMessage?.role === 'user') {
               lastMessage.content = reply.slice(0, currentIndex + 1);
             } else {
@@ -111,16 +132,16 @@ const TwoGPTChat: React.FC = () => {
                 content: reply.slice(0, currentIndex + 1),
               });
             }
-
+  
             updatedMessages = updated; // 保存最新的消息狀態
             return updated;
           });
-
+  
           // 同步逐字顯示到另一邊
           setOtherMessages((prev) => {
             const updated = [...prev];
             const lastMessage = updated[updated.length - 1];
-
+  
             if (lastMessage?.role === 'assistant') {
               lastMessage.content = reply.slice(0, currentIndex + 1);
             } else {
@@ -129,22 +150,27 @@ const TwoGPTChat: React.FC = () => {
                 content: reply.slice(0, currentIndex + 1),
               });
             }
-
+  
             return updated;
           });
-
+  
           currentIndex++;
-
-          // 完成模擬打字後觸發下一輪
-          if (currentIndex >= reply.length) {
-            clearInterval(interval);
+  
+          if (currentIndex < reply.length) {
+            // 遞迴調用模擬打字
+            setTimeout(typeNextCharacter, 50); // 模擬逐字打字速度
+          } else {
             setIsTyping(false);
-
-            // 等待打字完成后，触发下一轮对话
-            const nextSide = side === 'left' ? 'right' : 'left';
-            setTimeout(() => simulateGPTReply(updatedMessages, nextSide), 500); // 延迟 500ms后触发下一轮
+  
+            // 完成模擬打字後觸發下一輪
+            if (isChattingRef.current) {
+              const nextSide = side === 'left' ? 'right' : 'left';
+              setTimeout(() => simulateGPTReply(updatedMessages, nextSide), 500); // 延遲 500ms後觸發下一輪
+            }
           }
-        }, 50); // 模擬逐字打字速度
+        };
+  
+        typeNextCharacter(); // 啟動模擬打字
       } else {
         console.error('Error from OpenAI API:', data);
         setIsTyping(false);
@@ -154,6 +180,8 @@ const TwoGPTChat: React.FC = () => {
       setIsTyping(false);
     }
   };
+  
+  
 
   return (
     <Box
