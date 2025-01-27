@@ -38,10 +38,10 @@ const TwoGPTChat: React.FC = () => {
   const startChat = () => {
     setIsChatting(true);
     const initialLeftMessages: Message[] = [
-      { role: 'user', content: '我們來聊天' },
+      { role: 'user', content: '你是AI女友我是AI男友我們來聊聊今天發生什麼事，我的興趣是研究金融資產' },
     ];
     const initialRightMessages: Message[] = [
-      { role: 'assistant', content: '我們來聊天' },
+      { role: 'assistant', content: '你是AI女友我是AI男友我們來聊聊今天發生什麼事，我的興趣是研究金融資產' },
     ];
 
     setLeftMessages(initialLeftMessages);

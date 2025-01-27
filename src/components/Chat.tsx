@@ -7,10 +7,12 @@ import {
   Typography,
   CircularProgress,
   Avatar,
+  IconButton,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import ReactMarkdown from "react-markdown";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -68,10 +70,7 @@ const Chat: React.FC = () => {
       const data = await response.json();
       const newMessage = data.choices[0].message.content;
 
-      setMessages((prev) => [
-        ...prev,
-        { role: 'user', content: input },
-      ]);
+      setMessages((prev) => [...prev, { role: 'user', content: input }]);
 
       // 逐字顯示 GPT 回覆
       simulateTyping(newMessage);
@@ -131,64 +130,91 @@ const Chat: React.FC = () => {
         GPT-4o-mini Chat
       </Typography>
 
-      <Paper
-        elevation={3}
+      <Box
         sx={{
-          flexGrow: 1,
-          padding: 2,
-          minHeight: '300px',
-          maxHeight: '500px',
-          overflowY: 'scroll',
-          backgroundColor: '#f9f9f9',
+          position: 'relative', // 保证 IconButton 可以相对 Paper 定位
+          width: '100%',
+          height: 'auto',
         }}
       >
-        {messages.map((msg, index) => (
-          <Box
-            key={index}
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
-              marginBottom: '10px',
-            }}
-          >
-            {msg.role === 'assistant' && (
-              <Avatar sx={{ bgcolor: '#e0e0e0', marginRight: '10px' }}>
-                <SmartToyIcon />
-              </Avatar>
-            )}
+        <Paper
+          elevation={3}
+          sx={{
+            flexGrow: 1,
+            padding: 2,
+            minHeight: '300px',
+            maxHeight: '500px',
+            overflowY: 'scroll',
+            backgroundColor: '#f9f9f9',
+          }}
+        >
+          {messages.map((msg, index) => (
             <Box
+              key={index}
               sx={{
-                backgroundColor: msg.role === 'user' ? '#007bff' : '#e0e0e0',
-                color: msg.role === 'user' ? 'white' : 'black',
-                padding: 1.5,
-                borderRadius: 2,
-                maxWidth: '70%',
-                wordWrap: 'break-word',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                marginBottom: '10px',
               }}
             >
-              {msg.role === 'assistant' ? (
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
-              ) : (
-                <Typography variant='body1'>{msg.content}</Typography>
+              {msg.role === 'assistant' && (
+                <Avatar sx={{ bgcolor: '#e0e0e0', marginRight: '10px' }}>
+                  <SmartToyIcon />
+                </Avatar>
+              )}
+              <Box
+                sx={{
+                  backgroundColor: msg.role === 'user' ? '#007bff' : '#e0e0e0',
+                  color: msg.role === 'user' ? 'white' : 'black',
+                  padding: 1.5,
+                  borderRadius: 2,
+                  maxWidth: '70%',
+                  wordWrap: 'break-word',
+                }}
+              >
+                {msg.role === 'assistant' ? (
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                ) : (
+                  <Typography variant='body1'>{msg.content}</Typography>
+                )}
+              </Box>
+              {msg.role === 'user' && (
+                <Avatar
+                  sx={{
+                    bgcolor: '#007bff',
+                    color: 'white',
+                    marginLeft: '10px',
+                  }}
+                >
+                  <PersonIcon />
+                </Avatar>
               )}
             </Box>
-            {msg.role === 'user' && (
-              <Avatar
-                sx={{ bgcolor: '#007bff', color: 'white', marginLeft: '10px' }}
-              >
-                <PersonIcon />
-              </Avatar>
-            )}
-          </Box>
-        ))}
-        {loading && (
-          <Box sx={{ textAlign: 'center', marginTop: 1 }}>
-            <CircularProgress size={24} />
-          </Box>
-        )}
-        <div ref={messagesEndRef} />
-      </Paper>
+          ))}
+          {loading && (
+            <Box sx={{ textAlign: 'center', marginTop: 1 }}>
+              <CircularProgress size={24} />
+            </Box>
+          )}
+          <div ref={messagesEndRef} />
+        </Paper>
+
+        {/* IconButton 放置在 Paper 外部，但仍然固定在 Paper 的右下角 */}
+        <IconButton
+          onClick={scrollToBottom}
+          sx={{
+            position: 'absolute', // 相對於包含 Box 定位
+            bottom: '1rem', // 距離 Box 底部
+            right: '2rem', // 距離 Box 右側
+            backgroundColor: '#007bff',
+            color: 'white',
+            '&:hover': { backgroundColor: '#0056b3' },
+          }}
+        >
+          <ArrowDownwardIcon />
+        </IconButton>
+      </Box>
 
       <Box sx={{ display: 'flex', gap: 1 }}>
         <TextField
