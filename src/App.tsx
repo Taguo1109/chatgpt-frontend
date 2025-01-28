@@ -6,6 +6,7 @@ import TwoGPTChat from "./components/TwoGPTChat";
 import AutoCounter from "./components/AutoCounter";
 import GameScene from "./components/GameScene";
 import GameSceneAuto from "./components/GameSceneAuto";
+import Simulation from "./components/Simulation";
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <Route path="/auto-counter" element={<AutoCounter />} />
         <Route path="/game-scene" element={<GameScene />} />
         <Route path="/game-scene-auto" element={<GameSceneAuto />} />
+        <Route path="/simulation" element={<Simulation />} />
       </Routes>
     </Router>
   );
@@ -44,6 +46,7 @@ const MainTabs: React.FC = () => {
         <Tab label="Auto Counter" value="/auto-counter" />
         <Tab label="Game Scene" value="/game-scene" />
         <Tab label="Game Scene Auto" value="/game-scene-auto" />
+        <Tab label="Simulation" value="/simulation" />
       </Tabs>
     </Box>
   );
