@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useMemo, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 
-const GameSceneAuto: React.FC = () => {
+const GameScene: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // 使用 useMemo 建立玩家物件
+  // 使用 useState 管理玩家狀態
   const [player, setPlayer] = useState({
     x: 50,
     y: 200,
     width: 32,
     height: 32,
     color: 'blue',
-    direction: 'right', // 初始方向
   });
 
   // 使用 useMemo 建立房子物件
@@ -55,12 +54,21 @@ const GameSceneAuto: React.FC = () => {
       ctx.fillRect(player.x, player.y, player.width, player.height);
     };
 
-    // 更新玩家位置
+    // 每一步隨機選擇一個方向移動
     const movePlayer = () => {
-      let { x, y, direction } = player;
-      const speed = 5;
+      const speed = 10; // 移動步數
+      let { x, y } = player;
 
-      // 根據方向移動
+      // 隨機生成一個方向的函數
+      const randomDirection = () => {
+        const directions = ['up', 'down', 'left', 'right'];
+        return directions[Math.floor(Math.random() * directions.length)];
+      };
+
+      // 隨機選擇一個方向
+      const direction = randomDirection();
+
+      // 根據隨機方向移動
       switch (direction) {
         case 'up':
           y -= speed;
@@ -78,23 +86,15 @@ const GameSceneAuto: React.FC = () => {
           break;
       }
 
-      // 檢測是否撞牆
-      if (x <= 0 || x + player.width >= canvas.width || y <= 0 || y + player.height >= canvas.height) {
-        // 撞牆後隨機改變方向
-        const directions = ['up', 'down', 'left', 'right'];
-        direction = directions[Math.floor(Math.random() * directions.length)];
-      }
+      // 確保玩家不超出畫布範圍
+      x = Math.max(0, Math.min(x, canvas.width - player.width));
+      y = Math.max(0, Math.min(y, canvas.height - player.height));
 
-      // 更新玩家位置和方向
-      setPlayer((prev) => ({
-        ...prev,
-        x: Math.max(0, Math.min(x, canvas.width - player.width)),
-        y: Math.max(0, Math.min(y, canvas.height - player.height)),
-        direction,
-      }));
+      // 更新玩家狀態
+      setPlayer({ x, y, width: player.width, height: player.height, color: player.color });
     };
 
-    // 每 100 毫秒自動移動
+    // 每 100 毫秒自動移動並繪製
     const interval = setInterval(() => {
       movePlayer();
       draw();
@@ -118,7 +118,7 @@ const GameSceneAuto: React.FC = () => {
     >
       {/* 標題 */}
       <Typography variant="h4" gutterBottom>
-        2D 遊戲場景 - 自動移動
+        2D 遊戲場景 - 隨機移動每步改變方向
       </Typography>
 
       {/* 包含 Canvas 的容器 */}
@@ -141,4 +141,4 @@ const GameSceneAuto: React.FC = () => {
   );
 };
 
-export default GameSceneAuto;
+export default GameScene;
